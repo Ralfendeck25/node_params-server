@@ -8,15 +8,15 @@ function createServer() {
     const fullUrl = `http://${req.headers.host}${req.url}`;
     const givenUrl = new URL(fullUrl);
 
-    console.log(givenUrl);
-
     if (givenUrl.pathname.includes('//')) {
       givenUrl.pathname = givenUrl.pathname.replaceAll('//', '/');
     }
 
     const response = { parts: [], query: {} };
 
-    response.parts.push(...givenUrl.pathname.slice(1).split('/'));
+    // Remove leading slash only if pathname is not just '/'
+    const path = givenUrl.pathname === '/' ? '' : givenUrl.pathname.slice(1);
+    response.parts.push(...path.split('/'));
 
     const normalizedParams = Object.fromEntries(
       givenUrl.searchParams.entries(),
